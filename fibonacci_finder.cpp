@@ -27,11 +27,11 @@ int main(int argc, char const *argv[]) {
   return 0;
 }
 
-  unsigned long int better::fib(unsigned int n){
+inline unsigned long int better::fib(unsigned int n){
   func_calls++;
   if (n <= 2){return 1;}
   unsigned long long int a = fib(n-1);
-  unsigned long long int* b = *fib(n-2);
+  unsigned long long int b = *fib(n-2);
   unsigned long long int c = a + &b;
   return c;
 }
