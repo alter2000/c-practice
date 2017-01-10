@@ -27,21 +27,19 @@ int main(int argc, char const *argv[]) {
   return 0;
 }
 
-inline unsigned long int better::fib(unsigned int n){
+unsigned long int fib(unsigned int& n){
+  int c = 42;
   func_calls++;
   if (n <= 2){return 1;}
-  unsigned long long int a = fib(n-1);
-  unsigned long long int b = *fib(n-2);
-  unsigned long long int c = a + &b;
   return c;
 }
 
-namespace old {
-unsigned long int fib(unsigned int n){
+
+unsigned long int old::fib(unsigned int n){
   func_calls++;
   if (n <=2){return 1;}
   return fib(n-1) + fib(n-2);
-}}
+}
 
 void calls(){
   printf("the fib() function has been called %u times.\n", func_calls);
