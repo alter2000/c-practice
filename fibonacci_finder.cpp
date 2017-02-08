@@ -1,13 +1,14 @@
 #include <stdio.h>
-#include <ctype.h>
 #include <stdlib.h>
-unsigned int func_calls = 0;
-char err_string[]="That's not a natural number. Reopen this program.";
 
+char err_string[]="That's not a natural number. Reopen this program.";
 void calls();
+unsigned int func_calls = 0;
 // Must declare (correct term?) namespaces before using them
 namespace better {
-  unsigned long int fib(unsigned int n);
+  unsigned long int fib(unsigned int n, unsigned long int &c);
+  void fib(float input);
+  unsigned long int *store;
 }
 namespace old {
   unsigned long int fib(unsigned int n);
@@ -18,22 +19,24 @@ int main(int argc, char const *argv[]) {
   if (argc != 2) {
     printf("This program takes the n'th Fibonacci number as input and gives its value.\n");
     return 0;}
-  double input = atof(argv[1]);
-  if ((((int)(10 * input)) % 10) != 0){
-    printf("Natural numbers aren't always fractions. Rounding down to what you typed\n");
-  }
-  printf("%lu\n", fib(input));
+  float input = atof(argv[1]);
+  fib(input);
+  *store = 1;
+  printf("%lu\n", fib(input, *store));
   calls();
   return 0;
 }
-
-unsigned long int fib(unsigned int& n){
-  int c = 42;
+unsigned long int better::fib(unsigned int n, unsigned long int &c=*store){
+  if (n <= 2) {return 1;}
+  unsigned long int result = better::fib(n-1) + better::fib(n-2);
+  store = &result;
   func_calls++;
-  if (n <= 2){return 1;}
-  return c;
+  return result;
 }
-
+void better::fib(float n) {
+  if ((((int)(10 * n)) % 10) != 0)
+    printf("Natural numbers aren't always fractions. Rounding down to what you typed\n");
+}
 
 unsigned long int old::fib(unsigned int n){
   func_calls++;

@@ -1,35 +1,4 @@
-
-Feedback re wc:
-So here's what your code is doing... Read the first line or 1023
-characters, whichever is less. Scan through the characters we read, and
-if we see a null character, read another batch (but note, the prior
-batch may already have finished reading the file, whence fgets would
-have returned NULL signaling EOF). If the character being checked is not
-a null nor an End Of File (but note, fgets does not actually put EOF in
-the buffer, just a '\0'. See
-https://stackoverflow.com/questions/1835986/how-to-use-eof-to-run-through-a-text-file-in-c),
-process the character. Keep the scan going from whatever position in the
-buffer we last checked, even if we since replaced the contents of the
-buffer via another fgets. So for example, if the first line had 20 chars
-(0-19), you will have found buffer[20] == '\0' and read another line.
-Maybe that second line was only 10 chars, but you start checking at
-buffer[21], which is out of bounds and nonsense data, since it's past
-the null termination which would've been at buffer[10]. Who knows what
-the value of buffer[21] will be at that point and if/ when you may ever
-trigger another fgets read of the file. Maybe you will go through the
-rest of the chars out to buffer[1023] without finding it, or maybe you
-will get another line. Do you see the problems? You should be looking at
-the return value of fgets (for NULL) to know when not to do more fgets,
-and you should be starting at buffer[0] after each fgets. This may
-affect the logic further within the loop so I'm only commenting on it
-minimally. In other words using these insights, please go back and try
-to make a correctly working program, which I will then review in more
-detail than I have below.  You could alternatively consider using fgetc,
-which could make for simpler code (otherwise you need to deal with two
-cases: that the input file has less -or- more than 1024 characters
-between newlines).
-
-If you are only going to put chars in c, then make c a char, not an int
+2. If you are only going to put chars in c, then make c a char, not an int
 (perhaps not a strict requirement, but recommended). Likewise for
 last_c. Also fyi you can declare it at first use if not used again
 outside that scope, so "char c = buffer[n];"
@@ -57,31 +26,16 @@ within it, you don't need braces. So you can write:
 I was also hoping to see examples of while, do-while, for with compound
 condition, and continue. Please try these in the re-do.
 
------
 
-For the Fibonacci exercise, obviously you are getting more reasonable
-output -- good.
-
-You didn't quite do 2b. You checked the input, but it's not another
-version of the function. I was going for
+3. For the Fibonacci exercise, obviously you are getting more reasonable
+output -- good. You didn't quite do 2b. You checked the input, but it's
+not another version of the function. I was going for
 unsigned long int fib(float n);
 unsigned long int fib(double n);
 And then in these versions, you print something instead of computing
 (and return 0, or if you prefer, round and return the call to the
 computing version. If you are returning 0, the type (unsigned long int)
 is not important).
-
-inline is merely a suggestion to the compiler. Even if the compiler
-tries to follow the suggestion (and with recursion, it may not be able
-to), it may not make much difference if that's not where the expense is
-or if the function is already well localized (e.g. in instruction
-cache). It just depends on what the compiler does with your suggestion
-and how suboptimal it was being without your suggestion.
-
-In any event, I hope you did see that the number of calls and the clock
-time is growing exponentially with the value of n, so it is greater than
-O(1.6^n) (1.6 is a rounding of the golden ratio). E.g. if you try it
-with n=50, you are sitting there for some seconds.
 
 The iterative function looks like it could work, subject to declaring a
 and b (did you test it?). But of course it doesn't use pass by
@@ -114,3 +68,33 @@ of practice, kind of like a foreign language. Anyway, if you choose to
 write more C code, even if not assigned, I'll review it and give you
 feedback. Lastly I hope you realize my feedback is intended to be
 constructive, to teach and to show you a better way to do things.
+
+1. Feedback re wc:
+So here's what your code is doing... Read the first line or 1023
+characters, whichever is less. Scan through the characters we read, and
+if we see a null character, read another batch (but note, the prior
+batch may already have finished reading the file, whence fgets would
+have returned NULL signaling EOF). If the character being checked is not
+a null nor an End Of File (but note, fgets does not actually put EOF in
+the buffer, just a '\0'. See
+https://stackoverflow.com/questions/1835986/how-to-use-eof-to-run-through-a-text-file-in-c),
+process the character. Keep the scan going from whatever position in the
+buffer we last checked, even if we since replaced the contents of the
+buffer via another fgets. So for example, if the first line had 20 chars
+(0-19), you will have found buffer[20] == '\0' and read another line.
+Maybe that second line was only 10 chars, but you start checking at
+buffer[21], which is out of bounds and nonsense data, since it's past
+the null termination which would've been at buffer[10]. Who knows what
+the value of buffer[21] will be at that point and if/ when you may ever
+trigger another fgets read of the file. Maybe you will go through the
+rest of the chars out to buffer[1023] without finding it, or maybe you
+will get another line. Do you see the problems? You should be looking at
+the return value of fgets (for NULL) to know when not to do more fgets,
+and you should be starting at buffer[0] after each fgets. This may
+affect the logic further within the loop so I'm only commenting on it
+minimally. In other words using these insights, please go back and try
+to make a correctly working program, which I will then review in more
+detail than I have below.  You could alternatively consider using fgetc,
+which could make for simpler code (otherwise you need to deal with two
+cases: that the input file has less -or- more than 1024 characters
+between newlines).
