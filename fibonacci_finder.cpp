@@ -20,18 +20,18 @@ int main(int argc, char const *argv[]) {
     printf("This program takes the n'th Fibonacci number as input and gives its value.\n");
     return 0;}
   float input = atof(argv[1]);
-  fib(input);
-  *store = 1;
-  printf("%lu\n", fib(input, *store));
+  fib(input, *store);
   calls();
   return 0;
 }
 unsigned long int better::fib(unsigned int n, unsigned long int &c=*store){
-  if (n <= 2) {return 1;}
-  unsigned long int result = better::fib(n-1) + better::fib(n-2);
-  store = &result;
   func_calls++;
-  return result;
+  if (n <= 2) {return 1;}
+  if (n % 2 == 0){
+
+  }
+  unsigned long int result = 0;
+  c = result;
 }
 void better::fib(float n) {
   if ((((int)(10 * n)) % 10) != 0)
